@@ -34,7 +34,7 @@ class LinkReducerTestCase(TestCase):
 
         # Test with a valid shortened link
         response = self.client.get(
-            reverse("link_reducer:redirect_short_link", args=["abc123"])
+            reverse("link_reducer:redirect_short_link", args=[link.shortened_link])
         )
         self.assertRedirects(
             response, link.original_link, status_code=302, fetch_redirect_response=False
@@ -45,3 +45,14 @@ class LinkReducerTestCase(TestCase):
             reverse("link_reducer:redirect_short_link", args=["invalid"])
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_statistics_status_code(self):
+        self.response = self.client.get(reverse('link_reducer:statistics'))
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_statistics_redirect_count(self):
+        link = Link.objects.create(original_link='https://www.example1.com/', shortened_link='abcde')
+        self.client.get(reverse('link_reducer:redirect_short_link',
+                        args=[link.shortened_link]))
+        self.client.get(reverse('link_reducer:redirect_short_link',
+                        args=[link.shortened_link]))

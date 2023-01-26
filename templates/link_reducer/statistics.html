@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for link in links %}
+<p>Ссылка: {{ link.shortened_link }} | Число переходов: {{ link.redirect_count }}</p>
+{% endfor %}
+{% endblock %}
