@@ -29,7 +29,8 @@ class LinkReducerTestCase(TestCase):
     def test_redirect_short_link(self):
         # Create a link in the database
         link = Link.objects.create(
-            original_link="https://www.instagram.com/i.monoteist/", shortened_link="abc123"
+            original_link="https://www.instagram.com/i.monoteist/",
+            shortened_link="abc123",
         )
 
         # Test with a valid shortened link
@@ -47,12 +48,16 @@ class LinkReducerTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_statistics_status_code(self):
-        self.response = self.client.get(reverse('link_reducer:statistics'))
+        self.response = self.client.get(reverse("link_reducer:statistics"))
         self.assertEqual(self.response.status_code, 200)
 
     def test_statistics_redirect_count(self):
-        link = Link.objects.create(original_link='https://www.example1.com/', shortened_link='abcde')
-        self.client.get(reverse('link_reducer:redirect_short_link',
-                        args=[link.shortened_link]))
-        self.client.get(reverse('link_reducer:redirect_short_link',
-                        args=[link.shortened_link]))
+        link = Link.objects.create(
+            original_link="https://www.example1.com/", shortened_link="abcde"
+        )
+        self.client.get(
+            reverse("link_reducer:redirect_short_link", args=[link.shortened_link])
+        )
+        self.client.get(
+            reverse("link_reducer:redirect_short_link", args=[link.shortened_link])
+        )

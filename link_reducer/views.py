@@ -21,7 +21,8 @@ def create_short_link(request):
                 random.choices(string.ascii_letters + string.digits, k=6)
             )
             Link.objects.get_or_create(
-                original_link=original_link, shortened_link=shortened_link)
+                original_link=original_link, shortened_link=shortened_link
+            )
             return render(
                 request,
                 "link_reducer/create_short_link.html",
@@ -38,6 +39,7 @@ def redirect_short_link(request, shortened_link):
     link.save()
     return redirect(link.original_link)
 
+
 def statistics(request):
     links = Link.objects.all()
-    return render(request, 'link_reducer/statistics.html', {'links': links})
+    return render(request, "link_reducer/statistics.html", {"links": links})
