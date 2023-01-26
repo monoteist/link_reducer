@@ -4,7 +4,7 @@ import string
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 from .models import Link
@@ -20,8 +20,7 @@ def create_short_link(request):
             shortened_link = "".join(
                 random.choices(string.ascii_letters + string.digits, k=6)
             )
-            link = Link(original_link=original_link,
-                        shortened_link=shortened_link)
+            link = Link(original_link=original_link, shortened_link=shortened_link)
             link.save()
             return render(
                 request,
@@ -29,10 +28,10 @@ def create_short_link(request):
                 {"shortened_link": shortened_link},
             )
         except ValidationError:
-            messages.error(request, 'Некорректная ссылка!')
+            messages.error(request, "Некорректная ссылка!")
     return render(request, "link_reducer/create_short_link.html")
 
 
 def redirect_short_link(request, shortened_link):
-    link = Link.objects.get(shortened_link=shortened_link)
+    link = get_object_or_404(Link, shortened_link=shortened_link)
     return redirect(link.original_link)
